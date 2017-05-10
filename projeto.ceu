@@ -1,0 +1,122 @@
+#include "arduino/arduino.ceu"
+
+#define MAX_TIME 100
+#define TREE_SIZE 10
+#define trataBT(PIN,value) \
+loop do \
+			var int on = await PIN until on==LOW;\
+			await 20ms;\
+			{position = @value;\
+			Serial.print("apertou");\
+			if(update()!=0){\
+				finalR=value;\
+				break;\
+			}}\
+		end
+input int PIN_02;
+input int PIN_03;
+
+native/pre do
+##include <time.h>
+##include <stdlib.h>
+
+
+	int tree[TREE_SIZE]; 
+	int tree_position;
+	unsigned long m_time;
+	int level;
+	int position;
+	int score;
+	int finalR;
+	void clear_tree(){
+		int i;
+		for(i=0;i<TREE_SIZE;i++)tree[i]=0;
+	}
+	void start(){
+		m_time=MAX_TIME;
+		level = 1;
+		position = -1;
+		tree_position=0;
+		score = 0;
+		clear_tree();			
+	}
+	int collision(){
+		return position==tree[tree_position];
+	}
+	int new_branch(){
+		int a = rand()%2; 
+		if(a==0)a--;
+return a;
+		//agora a==-1 ou a==1
+/*		if(tree[((tree_position+TREE_SIZE-1)%TREE_SIZE)]==a)return a;
+		else return 0;
+*/
+	}
+	void time_calc(){
+				//decrementa tempo (tempo-V*level)
+	}
+	int update(){
+		Serial.print("update\n");
+		if(collision())return -1;
+		tree[tree_position] = new_branch();
+				Serial.print("tree{position}");
+				Serial.print(tree[tree_position]);
+				Serial.print("\nposition");
+				Serial.print(tree_position);
+		tree_position= (tree_position+1)%TREE_SIZE;
+		score++;
+		time_calc();		
+	}
+
+
+	void draw(){
+		int i;
+		Serial.print("\n");
+		Serial.print(m_time);
+		Serial.print("\n");
+		for(i=0;i<TREE_SIZE;i++){
+			Serial.print(" ");
+			Serial.print(tree[(tree_position+i)%TREE_SIZE]);
+			Serial.print("\n");
+		}
+		if(position==-1)Serial.println("A  ");
+		if(position==1)Serial.println("  A");
+		Serial.println("\n\n");
+	}/*
+	void draw_game_over(){
+			Serial.print("Acabou!!!!");
+			Serial.print("\n");
+	}*/
+end 
+{
+	Serial.begin(9600);
+	srand(time(NULL));   // should only be called once
+}
+loop do
+	{start();}
+	par/or do
+        	loop do
+			{draw();}
+			await 1s;
+		end
+	with
+		loop do
+			{if(update()!=0)break;}
+			await 1s;
+		end
+	with
+		trataBT(PIN_02,-1);
+	with
+		trataBT(PIN_03,1);
+	end
+/*
+	par/or do
+		loop do 
+			{draw_game_over();}
+	
+		end
+	with
+		var int on = await PIN_02 until on==LOW;	
+	end*/
+end
+		
