@@ -6,8 +6,13 @@
 loop do \
 			var int on = await PIN until on==LOW;\
 			await 20ms;\
+			var int on = await PIN until on==HIGH;\
+			await 20ms;\
 			{position = @value;\
-			Serial.print("apertou");\
+			calc_score();\
+			time_inc();\
+			move_tree();\
+			Serial.print("apertou\n\n");\
 			if(update()!=0){\
 				finalR=value;\
 				break;\
@@ -17,10 +22,8 @@ input int PIN_02;
 input int PIN_03;
 
 native/pre do
-##include <time.h>
-##include <stdlib.h>
 
-
+void draw();
 	int tree[TREE_SIZE]; 
 	int tree_position;
 	unsigned long m_time;
@@ -44,64 +47,92 @@ native/pre do
 		return position==tree[tree_position];
 	}
 	int new_branch(){
-		int a = rand()%2; 
-		if(a==0)a--;
-return a;
-		//agora a==-1 ou a==1
-/*		if(tree[((tree_position+TREE_SIZE-1)%TREE_SIZE)]==a)return a;
+		int a;
+		int prev = (tree_position+TREE_SIZE-1)%TREE_SIZE;/*anterior*/
+		if(prev==0) a = random(-3,4); 
+		else if(prev==-1)a = random(-3,1); 
+		else if(prev==1)a = random(0,4); 
+
+
+		if(a<0)return -1;
+		else if(a>0)return 1;
 		else return 0;
-*/
 	}
-	void time_calc(){
-				//decrementa tempo (tempo-V*level)
+	void time_dec(){
+		if(m_time<=level)m_time=0;
+		else m_time-= (level);
+	}
+	void time_inc(){
+		m_time+=level;
+	}
+	void move_tree(){
+		tree[tree_position] = new_branch();
+		tree_position= (tree_position+1)%TREE_SIZE;
+	}
+	void calc_score(){
+		score++;
 	}
 	int update(){
 		Serial.print("update\n");
 		if(collision())return -1;
-		tree[tree_position] = new_branch();
-				Serial.print("tree{position}");
-				Serial.print(tree[tree_position]);
-				Serial.print("\nposition");
-				Serial.print(tree_position);
-		tree_position= (tree_position+1)%TREE_SIZE;
-		score++;
-		time_calc();		
+		time_dec();
+		if(m_time==0)return -1;
+		draw();
+		return 0;		
 	}
 
-
-	void draw(){
-		int i;
+	void draw_score(){		
+		Serial.print("\nscore: ");
+		Serial.print(score);
 		Serial.print("\n");
+	}
+void draw_time(){
+		Serial.print("\ntime: ");
 		Serial.print(m_time);
 		Serial.print("\n");
-		for(i=0;i<TREE_SIZE;i++){
+}
+void draw_full_tree(){
+	Serial.print("\n");
+		for(int i=TREE_SIZE-1;i>=0;i--){
 			Serial.print(" ");
 			Serial.print(tree[(tree_position+i)%TREE_SIZE]);
 			Serial.print("\n");
 		}
+}
+void draw_p(){
+	
 		if(position==-1)Serial.println("A  ");
 		if(position==1)Serial.println("  A");
 		Serial.println("\n\n");
-	}/*
-	void draw_game_over(){
-			Serial.print("Acabou!!!!");
-			Serial.print("\n");
-	}*/
+}
+	void draw(){
+	  draw_score();
+	  draw_time();
+	  draw_full_tree();
+	  draw_p();
+
+	}
+
+	void draw_game_over(int i){
+		Serial.print("end\n\n");
+	  draw_score();
+	  draw_time();
+	  draw_full_tree();
+		if(i)draw_p();
+	}
+
 end 
 {
 	Serial.begin(9600);
-	srand(time(NULL));   // should only be called once
+	randomSeed(analogRead(0));  
 }
 loop do
+	{Serial.print("Press2 to start\n");}
+	var int on = await PIN_02 until on==LOW;	
 	{start();}
 	par/or do
-        	loop do
-			{draw();}
-			await 1s;
-		end
-	with
-		loop do
-			{if(update()!=0)break;}
+        loop do
+			{if(update()!=0){Serial.print("collision\n\n");break;}}
 			await 1s;
 		end
 	with
@@ -109,14 +140,17 @@ loop do
 	with
 		trataBT(PIN_03,1);
 	end
-/*
+	
+	{Serial.print("Acabou!!");}
 	par/or do
 		loop do 
-			{draw_game_over();}
-	
+			{draw_game_over(0);}
+			await 10s;
+			{draw_game_over(1);}	
+			await 10s;
 		end
 	with
 		var int on = await PIN_02 until on==LOW;	
-	end*/
+	end
 end
 		
