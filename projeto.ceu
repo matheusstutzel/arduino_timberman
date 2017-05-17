@@ -153,4 +153,21 @@ loop do
 		var int on = await PIN_02 until on==LOW;	
 	end
 end
-		
+/*
+input int  KEY;
+with
+    var int key = _KEY_NONE;
+    loop do
+        var int read1 = {read_button(0);}
+        await 50ms;
+        var int read2 = {read_button(0);}
+        if read1==read2 and key!=read1 then
+            key = read1;
+            if key != _KEY_NONE then
+                emit KEY(read1);
+            end
+        end
+    end
+end
+
+*/
