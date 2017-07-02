@@ -1,6 +1,7 @@
 #ifndef ENEMY
 #define ENEMY 10
-#include <SDL2/SDL.h>
+#include <SDL.h>
+#include <SDL_image.h>
 typedef struct{
 	int x;
 	int y;
@@ -14,8 +15,8 @@ typedef struct{
 }enemy;
 
 void updateEnemy(enemy);
-void drawEnemy(enemy e, SDL_Renderer* renderer,int tile);
+void drawEnemy(enemy e, SDL_Renderer* renderer, SDL_Window* window, int tile);
 
-void spawnEnemy(enemy * e ,int x, int y,int level);
+void spawnEnemy(enemy * e ,int x, int y,int level,SDL_Window* window);
 void freeEnemy(enemy *e);
 #endif
