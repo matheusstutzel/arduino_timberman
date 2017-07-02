@@ -29,8 +29,6 @@ void convertTile(SDL_Renderer* renderer,int code, SDL_Rect* dest){
 }
 void drawMap(SDL_Renderer* renderer, int tile){
   SDL_Rect rect = {0,0,tile,tile};
-
-  SDL_SetRenderDrawColor(renderer,255,0,0,0x00);
   for(int i = 0; i < __mapr; i++)for(int j = 0; j < __mapc; j++){
     rect.x=j*tile;
     rect.y=i*tile;

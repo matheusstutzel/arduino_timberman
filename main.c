@@ -1,27 +1,18 @@
 #include <global.h>
-
+#include <time.h>
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <SDL2/SDL_image.h>
-
 #include <player.h>
-
 #include <map.h>
-
-
+#include <enemy.h>
 
 SDL_Event e;
-
 SDL_Renderer* renderer;
+SDL_Texture *texture = NULL;
 
 
-
-    SDL_Texture *texture = NULL;
-
-
-
+#define ENEMYSIZE 5
 Uint32 now,delay,last;
 
 int *text;
@@ -30,6 +21,7 @@ int rows = 630;
 
 int cols = 470;
 
+enemy es[ENEMYSIZE];
 
 
 void draw_background(SDL_Renderer* render ){
@@ -41,16 +33,22 @@ void draw_background(SDL_Renderer* render ){
 }
 
 
-
+void drawEnemies(){
+	for(int i=0;i<ENEMYSIZE;i++)drawEnemy(es[i],renderer,tile);
+}
 void draw(){
 
   draw_background(renderer);
 
   drawMap(renderer,tile);
 
+  
+
+  drawEnemies();
+
   drawPlayer(renderer,tile);
 
-  drawPlayerView(renderer,tile,rows,cols);
+  //drawPlayerView(renderer,tile,rows,cols);
 
 }
 
@@ -63,11 +61,19 @@ int testMap(int dx,int dy){
   x+=dx;
 
   y+=dy;
-
-
-
-  return !map[y][x];
-
+  //!pode andar retorna
+  if(map[y][x])return !map[y][x];
+//pode andar....
+  for(int i=0;i<ENEMYSIZE;i++){
+	if(es[i].x==x && es[i].y==y){
+		//tem monstro ataca
+		combat(&es[i]);
+		//matou? anda...
+		return(es[i].hp<=0);
+  	}
+  }	
+  //!tem monstro anda...
+  return 0<1;//true
 }
 
 
@@ -121,8 +127,11 @@ int keyEvent(){
   return 0;
 
 }
-
+void updateEnemies(){
+	for(int i=0;i<ENEMYSIZE;i++)updateEnemy(es[i]);
+}
 int loop(){
+  updateEnemies();
 
   draw();
 
@@ -152,6 +161,25 @@ void myFree(){
 
 }
 
+void geraEnemy(){
+	int x,y,achou,count;
+	count =0;
+	spawnEnemy(&es[count++],2,1,10);
+  while(count < ENEMYSIZE){
+	achou = 0!=0;//false
+	while(!achou){
+		x = rand() %(rows/tile);
+		y = rand() %(cols/tile);
+		achou = !map[y][x];//retorna se o mapa ta vazio naquela posição
+	}
+	//verifica se tem outro enemy nessa posição
+	for(int i =0;i<count;i++)if(es[i].x==x && es[i].y==y)	achou = 0!=0;//false
+	if(achou){
+		spawnEnemy(&es[count++],x,y,10);
+	}	
+  }
+}
+
 int main (int argc, char* args[])
 
 {
@@ -176,12 +204,12 @@ int main (int argc, char* args[])
 
       texture = IMG_LoadTexture(renderer, "grass.png");
 
-
+	srand(time(NULL));
 
   renderer = SDL_CreateRenderer(window,-1,0);
 
   geraMap(rows, cols,tile);
-
+  geraEnemy();
 
 
   /* EXECUTION */
