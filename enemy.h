@@ -1,7 +1,8 @@
 #ifndef ENEMY
 #define ENEMY 10
-#include <SDL.h>
-#include <SDL_image.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <assets.h>
 typedef struct{
 	int x;
 	int y;

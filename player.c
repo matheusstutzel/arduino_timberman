@@ -10,30 +10,7 @@ float HPMAX;
 int rv;
 SDL_Surface* playerSurface = NULL;
 Mix_Chunk *battleSound = NULL;
-void loadPlayerSurface(SDL_Window* window){
-    //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load("C:\\Users\\Rodrigo\\Desktop\\Reativos\\hero.png");
-    if( loadedSurface == NULL ){
-        printf( "Unable to load image grass! SDL_image Error: %s\n", IMG_GetError() );
-    }
-    else{
-        //Convert surface to screen format
-        playerSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, NULL );
-        if( playerSurface == NULL ){
-            printf( "Unable to optimize image grass! SDL Error: %s\n", SDL_GetError() );
-        }
-        //Get rid of old loaded surface
-        SDL_FreeSurface( loadedSurface );
-    }
-}
-void loadBattleSound(){
-    //Load sound effects
-    battleSound = Mix_LoadWAV("C:\\Users\\Rodrigo\\Desktop\\Reativos\\battleSound.wav");
-    if( battleSound == NULL )
-    {
-        printf( "Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
-    }
-}
+
 void playerInit(SDL_Window* window){
     x = 1;
     y = 1;
@@ -42,8 +19,8 @@ void playerInit(SDL_Window* window){
     hp = 100;
     HPMAX =100.0;
     rv = 10;
-    loadPlayerSurface(window);
-    loadBattleSound();
+    playerSurface = loadPlayerSurface(window);
+    battleSound = loadBattleSound();
 }
 
 void movePlayer(int Dx,int Dy){

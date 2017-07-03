@@ -5,22 +5,7 @@ void updateEnemy(enemy e){
 
 }
 
-void loadEnemySurface(SDL_Window* window){
-    //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load("C:\\Users\\Rodrigo\\Desktop\\Reativos\\enemy.png");
-    if( loadedSurface == NULL ){
-        printf( "Unable to load image grass! SDL_image Error: %s\n", IMG_GetError() );
-    }
-    else{
-        //Convert surface to screen format
-        enemySurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, NULL );
-        if( enemySurface == NULL ){
-            printf( "Unable to optimize image grass! SDL Error: %s\n", SDL_GetError() );
-        }
-        //Get rid of old loaded surface
-        SDL_FreeSurface( loadedSurface );
-    }
-}
+
 
 void drawEnemy(enemy e, SDL_Renderer* renderer, SDL_Window* window, int tile){
     if(e.hp>0){
@@ -55,7 +40,7 @@ void spawnEnemy(enemy * e ,int x, int y,int level, SDL_Window* window){
 	e->speed=1;
 	e->state=0;
 	e->HPMAX= 100.0;
-	loadEnemySurface(window);
+	enemySurface = loadEnemySurface(window);
 }
 
 void freeEnemy(enemy *e){

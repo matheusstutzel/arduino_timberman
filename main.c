@@ -2,8 +2,8 @@
 #include <time.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL_image.h>
-#include <SDL_mixer.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include "player.h"
 #include "map.h"
 #include "enemy.h"

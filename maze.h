@@ -1,3 +1,5 @@
+#ifndef MAZE
+#define MAZE 10
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -11,3 +13,4 @@ typedef struct{
 } Node;
 Node * createMaze( int width, int height );
 void drawMaze(Node * nodes, int width, int height );
+#endif 
