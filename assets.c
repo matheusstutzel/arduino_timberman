@@ -1,7 +1,6 @@
 #include "assets.h"
 
 SDL_Surface* loadEnemySurface(SDL_Window* window){
-	SDL_Surface* enemySurface=NULL;
     //Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load(getFile("enemy.png"));
     if( loadedSurface == NULL ){
@@ -9,54 +8,51 @@ SDL_Surface* loadEnemySurface(SDL_Window* window){
     }
     else{
         //Convert surface to screen format
-        enemySurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
-        if( enemySurface == NULL ){
+        eSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
+        if( eSurface == NULL ){
             printf( "Unable to optimize image grass! SDL Error: %s\n", SDL_GetError() );
         }
         //Get rid of old loaded surface
         SDL_FreeSurface( loadedSurface );
     }
-	return enemySurface;
+	return eSurface;
 }
 
 SDL_Surface* loadGrass(SDL_Window* window){
-	SDL_Surface* grassSurface = NULL;
     //Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load(getFile("grass.png"));
     if( loadedSurface == NULL ){
         printf( "Unable to load image grass! SDL_image Error: %s\n", IMG_GetError() );
     }else{
         //Convert surface to screen format
-        grassSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
-        if( grassSurface == NULL ){
+        gSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
+        if( gSurface == NULL ){
             printf( "Unable to optimize image grass! SDL Error: %s\n", SDL_GetError() );
         }
         //Get rid of old loaded surface
         SDL_FreeSurface( loadedSurface );
     }
-	return grassSurface;
+	return gSurface;
 }
 
 SDL_Surface* loadObstacle(SDL_Window* window){
-	SDL_Surface* obstacleSurface = NULL;
     //Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load(getFile("obstacle.png"));
     if( loadedSurface == NULL ){
         printf( "Unable to load image grass! SDL_image Error: %s\n", IMG_GetError() );
     }else{
         //Convert surface to screen format
-        obstacleSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
-        if( obstacleSurface == NULL ){
+        oSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
+        if( oSurface == NULL ){
             printf( "Unable to optimize image grass! SDL Error: %s\n", SDL_GetError() );
         }
         //Get rid of old loaded surface
         SDL_FreeSurface( loadedSurface );
     }
-	return obstacleSurface;
+	return oSurface;
 }
 
 SDL_Surface* loadPlayerSurface(SDL_Window* window){
-	SDL_Surface* playerSurface = NULL;
     //Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load(getFile("hero.png"));
     if( loadedSurface == NULL ){
@@ -64,28 +60,26 @@ SDL_Surface* loadPlayerSurface(SDL_Window* window){
     }
     else{
         //Convert surface to screen format
-        playerSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
-        if( playerSurface == NULL ){
+        pSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
+        if( pSurface == NULL ){
             printf( "Unable to optimize image grass! SDL Error: %s\n", SDL_GetError() );
         }
         //Get rid of old loaded surface
         SDL_FreeSurface( loadedSurface );
     }
-	return playerSurface;
+	return pSurface;
 }
 Mix_Chunk * loadBattleSound(){
-	Mix_Chunk *battleSound = NULL;
     //Load sound effects
-    battleSound = Mix_LoadWAV(getFile("battleSound.wav"));
-    if( battleSound == NULL )
+    bSound = Mix_LoadWAV(getFile("battleSound.wav"));
+    if( bSound == NULL )
     {
         printf( "Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError() );
     }
-	return battleSound;
+	return bSound;
 }
-	char dest[500];
-char* getFile(char* filename){
 
+char* getFile(char* filename){
    	strcpy(dest, "/home/matheus/Projetos/UERJ/Reativos/projeto-reativos/");
 	strcat(dest, filename);
 	return dest;
