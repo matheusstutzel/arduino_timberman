@@ -16,9 +16,21 @@ LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 #define EMPTY 3
 #define A 0
 #define B 1
+#define MAXSTA 100
+
+
+#define btnNONE 0;  
+#define btnUP 1;  
+#define btnRIGHT 2; 
+#define btnLEFT 3; 
+#define btnDOWN 4; 
+#define btnSELECT 5; 
+
 
 int photocellPin=0;
 int btPin = 1;
+int sta=100;
+int lum;
 
 byte off   = 0b00000;
 byte mask[5] = {
@@ -69,6 +81,7 @@ void setup()
   //Define alguns chars personalizados
   lcd.createChar(FULL, f);
   lcd.createChar(EMPTY, e);
+  
 }
 
 void draw_per(int per,int c){
@@ -94,17 +107,18 @@ void draw_per(int per,int c){
     }
 }
 void draw(int lum, int sta){
-    lcd.setCursor(6,0);
+  	
+    lcd.setCursor(0,0);
+  	lcd.write("Visib.");
     draw_per(lum/10,A);
-    lcd.setCursor(6,1);
+    lcd.setCursor(0,1);
+  	lcd.write("Energ.");
     draw_per(sta,B);
 }
 int readPhotocell(){
   int photocellReading = analogRead(photocellPin);  
  
   if(photocellReading>1000)photocellReading=1000;
-  Serial.print(" , ");
-  Serial.println(photocellReading);     
  /*
   if (photocellReading < 10) {
     Serial.println(" - Dark");
@@ -119,21 +133,35 @@ int readPhotocell(){
   }*/
   return photocellReading;
 }
-void readButton(){
-  
-  int bt = analogRead(btPin);
-  
-  Serial.print(bt);  
+
+int read_button()
+{
+ int key_in = analogRead(btPin); 
+ if (key_in > 1000) 
+	return btnNONE;  
+ if (key_in < 50)   return btnUP;  
+ if (key_in < 250)  return btnRIGHT; 
+ if (key_in < 450)  return btnLEFT; 
+ if (key_in < 650)  return btnDOWN; 
+ if (key_in < 850)  return btnSELECT;  
+
+ return btnNONE;  
 }
-int sta=0;
+int calcSta(){
+	sta=sta +10-lum/35;
+	if(sta>=MAXSTA)sta=MAXSTA;
+	if(sta<=0)sta=0;
+}
+void mySerial(int l, int b){
+  Serial.println((int)b*1000+l);
+}
 void loop()
 {
-  int lum;
-  readButton();
+  int bt = read_button();
   lum = readPhotocell();
-  sta = sta + 1;
-  if(sta>=100)sta=0;
+  sta = calcSta();
   draw(lum,sta);
+  mySerial(lum,bt);
   delay(320);
 }
 
