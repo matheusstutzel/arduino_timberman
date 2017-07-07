@@ -11,6 +11,7 @@ Mix_Chunk * loadBattleSound();
 SDL_Surface* loadEnemySurface(SDL_Window* window);
 char* getFile(char* filename);
 SDL_Surface* loadBGSurface(SDL_Window* window);
+void setPath(char* path);
 
 
 #endif 

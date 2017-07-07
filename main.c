@@ -158,6 +158,7 @@ void geraEnemy(){
 
 int main (int argc, char* args[])
 {
+
   /* INITIALIZATION */
   int err = SDL_Init(SDL_INIT_EVERYTHING);
   window = SDL_CreateWindow("Input",
@@ -170,7 +171,9 @@ int main (int argc, char* args[])
     if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ){
         printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
     }
-	renderer = SDL_CreateRenderer(window,-1,0);
+	renderer = SDL_CreateRenderer(window,-1,SDL_RENDERER_SOFTWARE);
+
+	setPath(args[1]);
 	texture = IMG_LoadTexture(renderer, "grass.png");
 	geraMap(window, rows, cols,tile);
 	playerInit(window);

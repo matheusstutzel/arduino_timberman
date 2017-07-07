@@ -1,5 +1,6 @@
 #include "assets.h"
 char dest[500];
+char path[500];
 SDL_Surface* eSurface=NULL;
 SDL_Surface* gSurface = NULL;
 SDL_Surface* oSurface = NULL;
@@ -12,11 +13,13 @@ Mix_Chunk *bSound = NULL;
 SDL_Surface* load(SDL_Window* window,char* path){
     //Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load(getFile(path));
+    SDL_Surface* screen = SDL_GetWindowSurface(window);
 
-    if( loadedSurface == NULL ){
+
+    if( loadedSurface == NULL ||screen == NULL){
         printf( "Unable to load image grass! SDL_image Error: %s\n", IMG_GetError() );
     }else{
-	//gSurface=loadedSurface;
+	gSurface=loadedSurface;
         //Convert surface to screen format
         gSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
         if( gSurface == NULL ){
@@ -62,8 +65,12 @@ Mix_Chunk * loadBattleSound(){
 	return bSound;
 }
 
+void setPath(char * p){
+	strcpy(path,p);
+	strcat(path, "/");
+}
 char* getFile(char* filename){
-   	strcpy(dest, "/home/suporte/Downloads/projeto-reativos-master/");
+   	strcpy(dest, path);
 	strcat(dest, filename);
 	return dest;
 }
