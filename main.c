@@ -32,14 +32,27 @@ void draw_background(SDL_Renderer* render ){
 void drawEnemies(){
     for(int i=0;i<ENEMYSIZE;i++){
             drawEnemy(es[i],renderer,window,tile);
+
+SDL_UpdateWindowSurface( window );
     }
 }
 void draw(){
     draw_background(renderer);
+
+SDL_UpdateWindowSurface( window );
     drawMap(window, renderer,tile);
+
+SDL_UpdateWindowSurface( window );
+
     drawEnemies();
+
+SDL_UpdateWindowSurface( window );
     drawPlayer(renderer, window, tile);
-    //drawPlayerView(renderer,tile,rows,cols, 10);
+
+SDL_UpdateWindowSurface( window );
+    drawPlayerView(renderer,tile,rows,cols, 10);
+
+SDL_UpdateWindowSurface( window );
 }
 
 int testMap(int dx,int dy){
@@ -128,16 +141,15 @@ int loop(){
                             }
   updateEnemies();
 
-  draw();
+  
+draw();
 
   if(keyEvent())return 0;
 
   now = SDL_GetTicks();
 
   if(now > last + delay){
-
     last = SDL_GetTicks();
-
   }
 
 
@@ -200,7 +212,6 @@ int main (int argc, char* args[])
 
   IMG_Init(IMG_INIT_PNG);
 
-      texture = IMG_LoadTexture(renderer, "grass.png");
 
 	srand(time(NULL));
      //Initialize SDL_mixer
@@ -208,6 +219,8 @@ int main (int argc, char* args[])
         printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
     }
   renderer = SDL_CreateRenderer(window,-1,0);
+
+      texture = IMG_LoadTexture(renderer, "grass.png");
   geraMap(window, rows, cols,tile);
   playerInit(window);
   gMusic = Mix_LoadMUS( getFile("music.wav") );
@@ -221,7 +234,7 @@ int main (int argc, char* args[])
   delay = 16;
 
 
-
+   
   while (loop());
 
 

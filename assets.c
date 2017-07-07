@@ -5,7 +5,8 @@ SDL_Surface* gSurface = NULL;
 SDL_Surface* oSurface = NULL;
 SDL_Surface* pSurface = NULL;
 Mix_Chunk *bSound = NULL;
-/*SDL_Surface* loadEnemySurface(SDL_Window* window){
+
+SDL_Surface* loadEnemySurface(SDL_Window* window){
     //Load image at specified path
     SDL_Surface* loadedSurface = IMG_Load(getFile("enemy.png"));
     if( loadedSurface == NULL ){
@@ -20,9 +21,8 @@ Mix_Chunk *bSound = NULL;
         //Get rid of old loaded surface
         SDL_FreeSurface( loadedSurface );
     }
-	printf("eSurface = %d\n",eSurface);
 	return eSurface;
-}*/
+}
 
 SDL_Surface* loadGrass(SDL_Window* window){
     //Load image at specified path
