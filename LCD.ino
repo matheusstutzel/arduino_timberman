@@ -17,6 +17,9 @@ LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 #define A 0
 #define B 1
 
+int photocellPin=0;
+int btPin = 1;
+
 byte off   = 0b00000;
 byte mask[5] = {
   0b10000,
@@ -70,7 +73,7 @@ void setup()
 
 void draw_per(int per,int c){
   byte my_per[8];
-  byte aux;
+  byte aux = off;
     int i,j;
     for(i=1;i<=10;i++){
       if(per>=i*10)lcd.write((uint8_t)FULL);
@@ -79,18 +82,9 @@ void draw_per(int per,int c){
         int tmp = per-((i-1)*10);
         tmp/=2;
         for(j=0;j<5;j++){
-          if(tmp>=j)aux= aux | mask[i];
-          else aux = aux & mask[i];
+          if(tmp>=j)aux= aux | mask[j];
         }
-        Serial.print("draw_per per = ");
-        Serial.print(per);
-        Serial.print(" aux");
-        Serial.print(aux);
-        Serial.print(" tmp");
-        Serial.println(tmp);
-        for(j=0;j<8;j++)my_per[i]=aux;
-        Serial.print("escreveu teste i=");
-        Serial.println(i);
+        for(j=0;j<8;j++)my_per[j]=aux;
 
 
         lcd.createChar(c, my_per);
@@ -103,14 +97,15 @@ void draw(int lum, int sta){
     lcd.setCursor(6,0);
     draw_per(lum/10,A);
     lcd.setCursor(6,1);
-    draw_per(35,B);
+    draw_per(sta,B);
 }
 int readPhotocell(){
-  int photocellReading = analogRead(8);  
+  int photocellReading = analogRead(photocellPin);  
  
-  Serial.print("Analog reading = ");
-  Serial.print(photocellReading);     
- 
+  if(photocellReading>1000)photocellReading=1000;
+  Serial.print(" , ");
+  Serial.println(photocellReading);     
+ /*
   if (photocellReading < 10) {
     Serial.println(" - Dark");
   } else if (photocellReading < 200) {
@@ -121,16 +116,24 @@ int readPhotocell(){
     Serial.println(" - Bright");
   } else {
     Serial.println(" - Very bright");
-    if(photocellReading>1000)photocellReading=1000;
-  }
+  }*/
   return photocellReading;
 }
+void readButton(){
+  
+  int bt = analogRead(btPin);
+  
+  Serial.print(bt);  
+}
+int sta=0;
 void loop()
 {
-  int lum,sta;
+  int lum;
+  readButton();
   lum = readPhotocell();
-  sta = 50;
+  sta = sta + 1;
+  if(sta>=100)sta=0;
   draw(lum,sta);
-  delay(250);
+  delay(320);
 }
 
