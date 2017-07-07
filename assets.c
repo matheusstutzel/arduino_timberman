@@ -4,7 +4,26 @@ SDL_Surface* eSurface=NULL;
 SDL_Surface* gSurface = NULL;
 SDL_Surface* oSurface = NULL;
 SDL_Surface* pSurface = NULL;
+SDL_Surface* bSurface = NULL;
 Mix_Chunk *bSound = NULL;
+
+SDL_Surface* loadBGSurface(SDL_Window* window){
+    //Load image at specified path
+    SDL_Surface* loadedSurface = IMG_Load(getFile("black.png"));
+    if( loadedSurface == NULL ){
+        printf( "Unable to load image grass! SDL_image Error: %s\n", IMG_GetError() );
+    }
+    else{
+        //Convert surface to screen format
+        bSurface = SDL_ConvertSurface( loadedSurface, SDL_GetWindowSurface(window)->format, 0 );
+        if( bSurface == NULL ){
+            printf( "Unable to optimize image grass! SDL Error: %s\n", SDL_GetError() );
+        }
+        //Get rid of old loaded surface
+        SDL_FreeSurface( loadedSurface );
+    }
+	return bSurface;
+}
 
 SDL_Surface* loadEnemySurface(SDL_Window* window){
     //Load image at specified path
@@ -86,7 +105,7 @@ Mix_Chunk * loadBattleSound(){
 }
 
 char* getFile(char* filename){
-   	strcpy(dest, "/home/suporte/LCD/projeto-reativos-master/");
+   	strcpy(dest, "/home/suporte/Downloads/projeto-reativos-master/");
 	strcat(dest, filename);
 	return dest;
 }

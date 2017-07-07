@@ -7,6 +7,7 @@
 #include "player.h"
 #include "map.h"
 #include "enemy.h"
+#include "MySerial.h"
 
 #define ENEMYSIZE 5
 Uint32 now,delay,last;
@@ -20,6 +21,8 @@ Mix_Music *gMusic = NULL;
 int *text;
 int rows = 630;
 int cols = 470;
+int visi =10;
+int r;
 
 enemy es[ENEMYSIZE];
 
@@ -32,27 +35,15 @@ void draw_background(SDL_Renderer* render ){
 void drawEnemies(){
     for(int i=0;i<ENEMYSIZE;i++){
             drawEnemy(es[i],renderer,window,tile);
-
-SDL_UpdateWindowSurface( window );
     }
 }
 void draw(){
     draw_background(renderer);
-
-SDL_UpdateWindowSurface( window );
     drawMap(window, renderer,tile);
-
-SDL_UpdateWindowSurface( window );
-
     drawEnemies();
-
-SDL_UpdateWindowSurface( window );
     drawPlayer(renderer, window, tile);
-
-SDL_UpdateWindowSurface( window );
-    drawPlayerView(renderer,tile,rows,cols, 10);
-
-SDL_UpdateWindowSurface( window );
+    drawPlayerView(window,tile,rows,cols, visi);
+   
 }
 
 int testMap(int dx,int dy){
@@ -110,13 +101,13 @@ int keyEvent(){
 
         {
 
-          case SDLK_LEFT:  if(testMap(-1,0))movePlayer(-1,0); break;
+          case SDLK_LEFT:  trataKey(4); break;
 
-          case SDLK_RIGHT: if(testMap(1,0))movePlayer(1,0); break;
+          case SDLK_RIGHT: trataKey(3);break;
 
-          case SDLK_UP:    if(testMap(0,-1))movePlayer(0,-1); break;
+          case SDLK_UP:    trataKey(1);break;
 
-          case SDLK_DOWN:  if(testMap(0,1))movePlayer(0,1); break;
+          case SDLK_DOWN:  trataKey(2); break;
 
         }
 
@@ -128,6 +119,12 @@ int keyEvent(){
 
   return 0;
 
+}
+void trataKey(int code){
+if(code==4)if(testMap(-1,0))movePlayer(-1,0);
+if(code==3)if(testMap(1,0))movePlayer(1,0); 
+if(code==1)if(testMap(0,-1))movePlayer(0,-1); 
+if(code==2)if(testMap(0,1))movePlayer(0,1);
 }
 void updateEnemies(){
 	for(int i=0;i<ENEMYSIZE;i++)updateEnemy(es[i]);
@@ -142,6 +139,7 @@ int loop(){
   updateEnemies();
 
   
+
 draw();
 
   if(keyEvent())return 0;
@@ -150,16 +148,19 @@ draw();
 
   if(now > last + delay){
     last = SDL_GetTicks();
+	r = readSerial();
+	if(r>0)visi=r;
+	else trataKey(-r);
   }
 
 
 
-  SDL_RenderPresent(renderer);
+SDL_UpdateWindowSurface( window );
+//  SDL_RenderPresent(renderer);
 
   return 1;
 
 }
-
 
 
 void myFree(){
@@ -218,20 +219,19 @@ int main (int argc, char* args[])
     if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ){
         printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
     }
-  renderer = SDL_CreateRenderer(window,-1,0);
+	renderer = SDL_CreateRenderer(window,-1,0);
 
-      texture = IMG_LoadTexture(renderer, "grass.png");
-  geraMap(window, rows, cols,tile);
-  playerInit(window);
-  gMusic = Mix_LoadMUS( getFile("music.wav") );
-  geraEnemy();
-
-
+	texture = IMG_LoadTexture(renderer, "grass.png");
+	geraMap(window, rows, cols,tile);
+	playerInit(window);
+	gMusic = Mix_LoadMUS( getFile("music.wav") );
+	geraEnemy();
+	startSerial("/dev/ttyACM0");
   /* EXECUTION */
 
 
 
-  delay = 16;
+  delay = 160;
 
 
    

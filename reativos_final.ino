@@ -2,7 +2,7 @@
 loop do \
 			var int on = await KEY1 until on == btn;\
 			{\
-        mySerial(@value,1);\
+        mySerial(@value,2);\
 			};\
 		end
 
@@ -163,7 +163,7 @@ par do
         lum = readPhotocell();
         sta = calcSta();
         visi = calcVisi();
-        mySerial(visi,0);
+        mySerial(visi,1);
       }
 	await 50ms; 
     end
