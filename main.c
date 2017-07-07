@@ -70,103 +70,68 @@ int testMap(int dx,int dy){
 }
 
 
-
-int keyEvent(){
-
-  if(SDL_PollEvent(&e)!=0){
-
-    switch(e.type){
-
-      case SDL_QUIT: {
-
-        return 1;
-
-      }
-
-      case SDL_MOUSEBUTTONDOWN:{
-
-        SDL_MouseButtonEvent* me = (SDL_MouseButtonEvent*) &e;
-
-      }
-
-      case SDL_MOUSEMOTION:{
-
-        SDL_MouseMotionEvent* me = (SDL_MouseMotionEvent*) &e;
-
-      }
-
-      case SDL_KEYDOWN:
-
-        switch (e.key.keysym.sym)
-
-        {
-
-          case SDLK_LEFT:  trataKey(4); break;
-
-          case SDLK_RIGHT: trataKey(3);break;
-
-          case SDLK_UP:    trataKey(1);break;
-
-          case SDLK_DOWN:  trataKey(2); break;
-
-        }
-
-        break;
-
-    }
-
-  }
-
-  return 0;
-
-}
 void trataKey(int code){
 if(code==4)if(testMap(-1,0))movePlayer(-1,0);
 if(code==3)if(testMap(1,0))movePlayer(1,0); 
 if(code==1)if(testMap(0,-1))movePlayer(0,-1); 
 if(code==2)if(testMap(0,1))movePlayer(0,1);
 }
+int keyEvent(){
+
+  if(SDL_PollEvent(&e)!=0){
+    switch(e.type){
+      case SDL_QUIT: {
+        return 1;
+      }
+      case SDL_MOUSEBUTTONDOWN:{
+        SDL_MouseButtonEvent* me = (SDL_MouseButtonEvent*) &e;
+      }
+      case SDL_MOUSEMOTION:{
+        SDL_MouseMotionEvent* me = (SDL_MouseMotionEvent*) &e;
+      }
+      case SDL_KEYDOWN:
+        switch (e.key.keysym.sym)
+        {
+          case SDLK_LEFT:  trataKey(4); break;
+          case SDLK_RIGHT: trataKey(3);break;
+          case SDLK_UP:    trataKey(1);break;
+          case SDLK_DOWN:  trataKey(2); break;
+        }
+        break;
+    }
+  }
+  return 0;
+}
+
 void updateEnemies(){
 	for(int i=0;i<ENEMYSIZE;i++)updateEnemy(es[i]);
 }
 int loop(){
-    //If there is no music playing
-                            if( Mix_PlayingMusic() == 0 )
-                            {
-                                //Play the music
-                                Mix_PlayMusic( gMusic, -1 );
-                            }
-  updateEnemies();
+	//If there is no music playing
+	if( Mix_PlayingMusic() == 0 )
+	{
+		//Play the music
+		Mix_PlayMusic( gMusic, -1 );
+	}
+	updateEnemies();
+	draw();
+	if(keyEvent())return 0;
 
-  
-
-draw();
-
-  if(keyEvent())return 0;
-
-  now = SDL_GetTicks();
-
-  if(now > last + delay){
-    last = SDL_GetTicks();
 	r = readSerial();
-	if(r>0)visi=r;
-	else trataKey(-r);
-  }
+	if(r>0)visi=r*3/tile +1;
+	else if(r<0) {trataKey(-r);}
+//	printf("R: %d Visi %d\n",r,visi);
 
+	SDL_UpdateWindowSurface( window );
+	//  SDL_RenderPresent(renderer);
 
-
-SDL_UpdateWindowSurface( window );
-//  SDL_RenderPresent(renderer);
-
-  return 1;
+	return 1;
 
 }
 
 
 void myFree(){
-
   freeMap();
-
 }
 
 void geraEnemy(){
@@ -192,35 +157,20 @@ void geraEnemy(){
 }
 
 int main (int argc, char* args[])
-
 {
-
   /* INITIALIZATION */
-
-
-
   int err = SDL_Init(SDL_INIT_EVERYTHING);
-
-
-
   window = SDL_CreateWindow("Input",
-
   SDL_WINDOWPOS_UNDEFINED,
-
   SDL_WINDOWPOS_UNDEFINED,
-
   rows, cols, SDL_WINDOW_SHOWN);
-
   IMG_Init(IMG_INIT_PNG);
-
-
 	srand(time(NULL));
      //Initialize SDL_mixer
     if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ){
         printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
     }
 	renderer = SDL_CreateRenderer(window,-1,0);
-
 	texture = IMG_LoadTexture(renderer, "grass.png");
 	geraMap(window, rows, cols,tile);
 	playerInit(window);
@@ -228,27 +178,11 @@ int main (int argc, char* args[])
 	geraEnemy();
 	startSerial("/dev/ttyACM0");
   /* EXECUTION */
-
-
-
-  delay = 160;
-
-
-   
   while (loop());
-
-
-
   /* FINALIZATION */
-
   myFree();
-
   SDL_DestroyWindow(window);
-
   SDL_Quit();
-
-
-
   return 0;
 
 }

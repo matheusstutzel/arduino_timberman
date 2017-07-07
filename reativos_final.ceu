@@ -128,10 +128,10 @@ int read_button()
  int key_in = analogRead(btPin);
  if (key_in > 1000)
 	return btnNONE;
- if (key_in < 50)   return btnUP;
- if (key_in < 250)  return btnRIGHT;
- if (key_in < 450)  return btnLEFT;
- if (key_in < 650)  return btnDOWN;
+ if (key_in < 50)   return btnRIGHT;
+ if (key_in < 250)  return btnUP;
+ if (key_in < 450)  return btnDOWN;
+ if (key_in < 650)  return btnLEFT;
  if (key_in < 850)  return btnSELECT;
 
  return btnNONE;
