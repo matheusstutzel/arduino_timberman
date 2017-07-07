@@ -39,7 +39,7 @@ void draw(){
     drawMap(window, renderer,tile);
     drawEnemies();
     drawPlayer(renderer, window, tile);
-    drawPlayerView(renderer,tile,rows,cols, 10);
+    //drawPlayerView(renderer,tile,rows,cols, 10);
 }
 
 int testMap(int dx,int dy){
@@ -210,7 +210,7 @@ int main (int argc, char* args[])
   renderer = SDL_CreateRenderer(window,-1,0);
   geraMap(window, rows, cols,tile);
   playerInit(window);
-  gMusic = Mix_LoadMUS( "C:\\Users\\Rodrigo\\Desktop\\Reativos\\music.wav" );
+  gMusic = Mix_LoadMUS( getFile("music.wav") );
   geraEnemy();
 
 
