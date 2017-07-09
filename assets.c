@@ -57,7 +57,7 @@ SDL_Surface* loadPlayerSurface(SDL_Window* window){
 }
 Mix_Chunk * loadBattleSound(){
     //Load sound effects
-    bSound = Mix_LoadWAV(getFile("battleSound.wav"));
+    bSound = Mix_LoadWAV(getFile("sound.wav"));
     if( bSound == NULL )
     {
         printf( "Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError() );

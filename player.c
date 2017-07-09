@@ -36,17 +36,10 @@ void getPosPlayer(int *px,int *py){
 }
 
 void drawPlayer(SDL_Renderer* renderer, SDL_Window* window, int tile){
-    SDL_Rect rect = {0,0,tile,tile- (tile/10)};
+    SDL_Rect rect = {0,0,tile,tile};
     rect.x=x*tile;
     rect.y=y*tile;
     SDL_BlitSurface(playerSurface, NULL, SDL_GetWindowSurface(window), &rect);
-
-    SDL_SetRenderDrawColor(renderer,0,0,255,0x00);
-	rect.h=(tile/10);
-	rect.w=(int)((hp/HPMAX)*(tile));
-    rect.x=x*tile;
-    rect.y=y*tile+(tile-(tile/10));
-    SDL_RenderFillRect(renderer,&rect);
 }
 void drawPlayerView(SDL_Window* window,int tile,int w,int h, int vision){
     rv = vision;

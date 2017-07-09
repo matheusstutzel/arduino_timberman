@@ -9,7 +9,7 @@ void updateEnemy(enemy e){
 
 void drawEnemy(enemy e, SDL_Renderer* renderer, SDL_Window* window, int tile){
     if(e.hp>0){
-        SDL_Rect rect = {0,0,tile,tile- (tile/10)};
+        SDL_Rect rect = {0,0,tile,tile};
         if(e.hp>0){
                 SDL_SetRenderDrawColor(renderer,e.r,e.g,e.b,0x00);
         }else{
@@ -18,14 +18,6 @@ void drawEnemy(enemy e, SDL_Renderer* renderer, SDL_Window* window, int tile){
         rect.x=e.x*tile;
         rect.y=e.y*tile;
         SDL_BlitSurface(enemySurface, NULL, SDL_GetWindowSurface(window), &rect);
-
-        SDL_SetRenderDrawColor(renderer,255,0,0,0x00);
-        rect.h=(tile/10);
-        rect.w=(int)((e.hp/e.HPMAX)*(tile));
-        rect.x=e.x*tile;
-        rect.y=e.y*tile+(tile-(tile/10));
-
-        SDL_RenderFillRect(renderer,&rect);
     }
 }
 
